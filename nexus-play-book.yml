@@ -1,0 +1,59 @@
+---
+- name: Install Docker and Docker Compose, and deploy from Git
+  hosts: your_target_server
+  become: yes
+
+
+  vars_files:
+    - vault.yml
+
+
+  tasks:
+    - name: Install dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg-agent
+        - software-properties-common
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: Install Docker Compose
+      pip:
+        name: docker-compose
+        state: present
+
+    # - name: Clone or pull the Git repository
+    #   git:
+    #     repo: https://github.com/your_username/your_docker_compose_repo.git
+    #     dest: /path/to/your/local/repo
+
+    - name: Clone or pull the Git repository from self-hosted GitLab with basic auth
+      git:
+        repo: "https://{{ gitlab_username }}:{{ gitlab_password }}@git.netall.live/devops/nexus.git"
+        dest: /opt/nexus
+        accept_hostkey: yes  # Add this line if you're using SSH and need to accept the host key
+
+
+    - name: Deploy Docker Compose
+      command: docker-compose up -d
+      args:
+        chdir: /opt/nexus
+

@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": "file:///home/ayazi/Desktop/git/nexus/ansible/nexus-play-book.yml"
+    },
+    "ansible.python.interpreterPath": "/bin/python3"
+}
