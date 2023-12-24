@@ -1,6 +1,6 @@
 ---
 - name: Install Docker and Docker Compose, and deploy from Git
-  hosts: your_target_server
+  hosts: all  ## play against all hosts defined in hosts file
   become: yes
 
 
